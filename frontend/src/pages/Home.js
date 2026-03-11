@@ -10,7 +10,12 @@ export default function Home() {
     useEffect(() => {
         fetch(import.meta.env.VITE_API_URL+'/products?'+ searchParams)
         .then(res => res.json())
-        .then( res => setProducts(res.products))
+        .then( res => {
+            if(res.products) {
+                setProducts(res.products);
+            }
+        })
+        .catch(err => console.error('Error fetching products:', err))
     },[searchParams])
 
     return <Fragment>
@@ -18,7 +23,7 @@ export default function Home() {
 
         <section id="products" className="container mt-5">
         <div className="row">
-            {products.map(product =><ProductCard product={product}/>)}
+            {products.map(product =><ProductCard key={product._id} product={product}/>)}
         </div>
         </section>
     </Fragment>
